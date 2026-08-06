@@ -1,0 +1,663 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register · Monitoring Suhu POP</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+
+    <style>
+        :root {
+            --bg-base:       #0d1117;
+            --bg-surface:    #161b22;
+            --bg-elevated:   #1c2230;
+            --bg-hover:      #21293a;
+            --border:        rgba(255,255,255,0.06);
+            --border-light:  rgba(255,255,255,0.10);
+
+            --blue:          #3b82f6;
+            --blue-dim:      rgba(59,130,246,0.12);
+            --cyan:          #06b6d4;
+            --cyan-dim:      rgba(6,182,212,0.12);
+            --green:         #22c55e;
+            --green-dim:     rgba(34,197,94,0.12);
+            --amber:         #f59e0b;
+            --amber-dim:     rgba(245,158,11,0.12);
+            --red:           #ef4444;
+            --red-dim:       rgba(239,68,68,0.12);
+            --slate:         #64748b;
+
+            --text-primary:  #f1f5f9;
+            --text-secondary:#94a3b8;
+            --text-muted:    #475569;
+
+            --font-main:     'Inter', system-ui, sans-serif;
+            --font-mono:     'JetBrains Mono', 'Fira Code', monospace;
+
+            --radius-sm:     8px;
+            --radius-md:     14px;
+            --radius-lg:     20px;
+            --radius-xl:     28px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg-base);
+            font-family: var(--font-main);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        /* ── REGISTER CARD ── */
+        .register-wrapper {
+            width: 100%;
+            max-width: 520px;
+            padding: 0.75rem;
+        }
+
+        .register-card {
+            position: relative;
+            background: rgba(22, 27, 34, 0.96);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: var(--radius-xl);
+            padding: 2.5rem 2.4rem 2.8rem;
+            box-shadow: 0 28px 90px rgba(0,0,0,0.35);
+            backdrop-filter: blur(16px);
+            overflow: hidden;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+
+        .register-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top, rgba(59,130,246,0.15), transparent 26%),
+                        radial-gradient(circle at 80% 20%, rgba(6,182,212,0.1), transparent 18%);
+            pointer-events: none;
+        }
+
+        .register-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .register-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255,255,255,0.14);
+            box-shadow: 0 34px 100px rgba(0,0,0,0.38);
+        }
+
+        /* ── HEADER ── */
+        .register-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 1.6rem;
+        }
+
+        .register-header .brand-icon {
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(135deg, var(--blue), var(--cyan));
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.9rem;
+            color: white;
+            margin-bottom: 10px;
+            box-shadow: 0 18px 40px rgba(59,130,246,0.18);
+        }
+
+        .register-header .brand-text {
+            font-weight: 700;
+            font-size: 1.15rem;
+            letter-spacing: 0.12em;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .register-header .brand-text small {
+            display: block;
+            font-weight: 500;
+            font-size: 0.75rem;
+            letter-spacing: 0.16em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-top: 0.3rem;
+        }
+
+        /* ── TITLE ── */
+        .register-title {
+            font-weight: 700;
+            font-size: 1.35rem;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+            margin-bottom: 0.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .register-title i {
+            color: var(--cyan);
+            font-size: 1.2rem;
+        }
+
+        .register-sub {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            display: block;
+            margin-top: 0.25rem;
+        }
+
+        /* ── 2 LOGO DI BAWAH JUDUL (UKURAN BESAR) ── */
+        .logo-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.8rem;
+            margin: 1.2rem 0 1.5rem;
+            padding: 0.9rem 0;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .logo-row .logo-slot {
+            width: 150px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: rgba(255,255,255,0.03);
+            border-radius: 18px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .logo-row .logo-slot img {
+            max-height: 70px;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        .logo-row .logo-slot img.logo-pertamina {
+            max-height: 200px;
+            max-width: 120px;
+        }
+
+        .logo-row .logo-divider {
+            width: 1px;
+            height: 50px;
+            background: rgba(255,255,255,0.12);
+            border-radius: 4px;
+        }
+
+        /* ── FORM ── */
+        .form-label-custom {
+            font-weight: 600;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.28rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-label-custom i {
+            color: var(--cyan);
+            width: 18px;
+            font-size: 0.95rem;
+        }
+
+        .input-group-custom {
+            position: relative;
+        }
+
+        .input-group-custom .form-control {
+            height: 48px;
+            border-radius: calc(var(--radius-sm) + 4px);
+            padding-left: 3rem;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.12);
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .input-group-custom .form-control:focus {
+            border-color: var(--cyan);
+            box-shadow: 0 0 0 4px rgba(6,182,212,0.14);
+            background: rgba(255,255,255,0.07);
+        }
+
+        .input-group-custom .form-control::placeholder {
+            color: rgba(241,245,249,0.65);
+            font-weight: 400;
+            font-size: 0.9rem;
+        }
+
+        .input-group-custom .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 1rem;
+            z-index: 4;
+        }
+
+        /* ── BUTTON REGISTER ── */
+        .btn-register {
+            background: linear-gradient(135deg, var(--cyan), var(--blue));
+            border: none;
+            height: 52px;
+            border-radius: calc(var(--radius-sm) + 2px);
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: 0.35px;
+            color: white;
+            box-shadow: 0 12px 30px rgba(6,182,212,0.24);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.15s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 11px;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 16px 36px rgba(6,182,212,0.34);
+            opacity: 0.98;
+        }
+
+        .btn-register i {
+            font-size: 1rem;
+        }
+
+        /* ── ALERT ── */
+        .alert-custom {
+            border-radius: calc(var(--radius-sm) + 2px);
+            border: 1px solid rgba(255,255,255,0.12);
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 0.75rem 1.2rem;
+            background: rgba(255,255,255,0.03);
+            color: var(--text-secondary);
+            border-left: 4px solid var(--blue);
+        }
+
+        .alert-custom.alert-success {
+            border-left-color: var(--green);
+            color: var(--green);
+        }
+
+        .alert-custom.alert-danger {
+            border-left-color: var(--red);
+            color: var(--red);
+        }
+
+        .alert-custom i {
+            margin-right: 0.75rem;
+        }
+
+        /* ── DIVIDER ── */
+        .divider {
+            display: flex;
+            align-items: center;
+            color: rgba(241,245,249,0.72);
+            font-size: 0.78rem;
+            letter-spacing: 0.55px;
+            margin: 0.7rem 0 0.9rem;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255,255,255,0.08);
+        }
+
+        .divider::before {
+            margin-right: 1rem;
+        }
+        .divider::after {
+            margin-left: 1rem;
+        }
+
+        /* ── LOGIN LINK ── */
+        .login-link {
+            color: var(--cyan);
+            font-weight: 700;
+            text-decoration: none;
+            border-bottom: 1.5px dotted rgba(6,182,212,0.45);
+            transition: color 0.15s ease, border-color 0.15s ease;
+            font-size: 0.92rem;
+        }
+
+        .login-link:hover {
+            color: #7dd3fc;
+            border-bottom-color: rgba(6,182,212,0.8);
+        }
+
+        /* ── FOOTER ── */
+        .register-footer {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            margin-top: 1.4rem;
+            letter-spacing: 0.35px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .register-footer i {
+            color: var(--cyan);
+            font-size: 0.72rem;
+        }
+
+        .register-footer .badge-footer {
+            background: rgba(255,255,255,0.04);
+            padding: 0.2rem 0.85rem;
+            border-radius: 999px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            font-size: 0.72rem;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        /* ── STATIC LOGO ── */
+        .static-logo-area {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .static-logo-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.03);
+            padding: 0.35rem 1rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            border: 1px solid rgba(255,255,255,0.08);
+            letter-spacing: 0.2px;
+        }
+
+        .static-logo-item i {
+            color: var(--cyan);
+            font-size: 0.78rem;
+        }
+
+        .static-logo-item .logo-symbol {
+            display: inline-block;
+            background: rgba(255,255,255,0.04);
+            color: var(--cyan);
+            padding: 0 6px;
+            border-radius: 12px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            line-height: 16px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 480px) {
+            .register-card {
+                padding: 1.5rem 1.2rem;
+            }
+            .logo-row .logo-slot {
+                width: 100px;
+                height: 60px;
+            }
+            .logo-row .logo-slot img {
+                max-height: 55px;
+            }
+            .logo-row {
+                gap: 1.5rem;
+                padding: 0.5rem 0;
+            }
+            .logo-row .logo-divider {
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="register-wrapper">
+    <div class="register-card">
+
+        <!-- ── HEADER ── -->
+        <div class="register-header">
+            <div class="brand-icon">
+                <i class="fas fa-thermometer-half"></i>
+            </div>
+            <div class="brand-text">
+                Monitoring Suhu POP
+                <small>Realtime Temperature Dashboard</small>
+            </div>
+        </div>
+
+        <!-- ── TITLE ── -->
+        <div class="text-center">
+            <div class="register-title">
+                <i class="fas fa-user-plus"></i> Register
+            </div>
+            <span class="register-sub">buat akun baru</span>
+        </div>
+
+        <!-- ── 2 LOGO DI BAWAH JUDUL (UKURAN BESAR) ── -->
+        <div class="logo-row">
+            <div class="logo-slot">
+                <img class="logo-pertamina" src="{% static 'images/logo-kiri.png' %}" alt="Logo Kiri" />
+            </div>
+            <div class="logo-divider"></div>
+            <div class="logo-slot">
+                <img src="{% static 'images/logo-kanan.png' %}" alt="Logo Kanan" />
+            </div>
+        </div>
+
+        <!-- ── MESSAGES ── -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-custom alert-success mt-2">
+                    <i class="fas fa-check-circle"></i> {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if error %}
+            <div class="alert alert-custom alert-danger mt-2">
+                <i class="fas fa-exclamation-triangle"></i> {{ error }}
+            </div>
+        {% endif %}
+
+        <!-- ── FORM REGISTER ── -->
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="mb-2">
+                <label class="form-label-custom">
+                    <i class="fas fa-user"></i> Nama Lengkap
+                </label>
+                <div class="input-group-custom">
+                    <span class="input-icon"><i class="fas fa-user-circle"></i></span>
+                    <input
+                        type="text"
+                        name="nama_lengkap"
+                        class="form-control"
+                        placeholder="Masukkan nama lengkap"
+                        maxlength="100"
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label-custom">
+                    <i class="fas fa-envelope"></i> Email
+                </label>
+                <div class="input-group-custom">
+                    <span class="input-icon"><i class="fas fa-envelope"></i></span>
+                    <input
+                        type="email"
+                        name="email"
+                        class="form-control"
+                        placeholder="Masukkan email"
+                        maxlength="320"
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label-custom">
+                    <i class="fas fa-phone"></i> No HP
+                </label>
+                <div class="input-group-custom">
+                    <span class="input-icon"><i class="fas fa-phone"></i></span>
+                    <input
+                        type="text"
+                        name="no_hp"
+                        class="form-control"
+                        placeholder="Masukkan nomor HP"
+                        maxlength="20"
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label-custom">
+                    <i class="fas fa-building"></i> Divisi
+                </label>
+                <div class="input-group-custom">
+                    <span class="input-icon"><i class="fas fa-building"></i></span>
+                    <input
+                        type="text"
+                        name="divisi"
+                        class="form-control"
+                        placeholder="Masukkan divisi"
+                        maxlength="50"
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label-custom">
+                    <i class="fas fa-user-tag"></i> Username
+                </label>
+                <div class="input-group-custom">
+                    <span class="input-icon"><i class="fas fa-user-tag"></i></span>
+                    <input
+                        type="text"
+                        name="username"
+                        class="form-control"
+                        placeholder="Masukkan username"
+                        maxlength="50"
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label-custom">
+                    <i class="fas fa-lock"></i> Password
+                </label>
+                <div class="input-group-custom">
+                    <span class="input-icon"><i class="fas fa-key"></i></span>
+                    <input
+                        type="password"
+                        name="password"
+                        class="form-control"
+                        placeholder="Masukkan password"
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label-custom">
+                    <i class="fas fa-lock"></i> Konfirmasi Password
+                </label>
+                <div class="input-group-custom">
+                    <span class="input-icon"><i class="fas fa-check-circle"></i></span>
+                    <input
+                        type="password"
+                        name="confirm_password"
+                        class="form-control"
+                        placeholder="Konfirmasi password"
+                        required
+                    >
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-register w-100">
+                <i class="fas fa-user-plus"></i> Daftar
+            </button>
+        </form>
+
+        <!-- ── DIVIDER + LOGIN ── -->
+        <div class="divider">atau</div>
+
+        <p class="text-center" style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.2rem;">
+            Sudah memiliki akun?
+            <a href="{% url 'login' %}" class="login-link">
+                Login disini <i class="fas fa-arrow-right" style="font-size: 0.65rem;"></i>
+            </a>
+        </p>
+
+        <!-- ── FOOTER ── -->
+        <div class="register-footer">
+            <i class="fas fa-circle-check" style="color: var(--green);"></i>
+            <span style="font-weight: 600; color: var(--text-secondary);">ALWAYS RELIABLE</span>
+        </div>
+
+        <!-- ── STATIC LOGO ── -->
+        <div class="static-logo-area">
+            <span class="static-logo-item">
+                <i class="fas fa-bolt"></i>
+                <span class="logo-symbol">PGN</span>
+                <i class="fas fa-microchip" style="color: var(--cyan);"></i>
+                <i class="fas fa-cloud" style="color: var(--slate);"></i>
+                <span style="font-weight: 700; color: var(--text-secondary);">SUHU</span>
+            </span>
+            <span class="static-logo-item">
+                <i class="fas fa-chart-line"></i>
+                <span style="font-weight: 700;">24/7</span>
+            </span>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
