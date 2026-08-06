@@ -200,10 +200,11 @@
         }
 
         @media (max-width: 768px){
-            /* Topbar dipaksa jadi 2 baris yang rapi di layar sempit, bukan
-               wrap otomatis, supaya jam & logo tidak pernah bertabrakan
-               dengan brand/hamburger di satu baris. */
+            /* Topbar dipaksa jadi 2 baris yang rapi & center di layar sempit.
+               Tombol hamburger dijadikan posisi absolut di pojok kiri supaya
+               tidak ikut menggeser pusat konten baris brand. */
             .topbar{
+                position: relative;
                 flex-direction: column;
                 align-items: stretch;
                 flex-wrap: nowrap;
@@ -215,14 +216,29 @@
                 justify-content: space-between;
             }
             .topbar-zone-left{
+                position: relative;
                 flex: 0 0 auto;
+                justify-content: space-between;
+                padding: 0 3px 0 52px;
+                min-height: 38px;
+            }
+            .btn-menu-toggle{
+                position: absolute;
+                left: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 34px;
+                height: 34px;
+                font-size: 0.85rem;
+                margin-right: 0;
             }
             .brand-subtitle{
                 display: none;
             }
             .topbar-brand{
-                flex: 1 1 auto;
+                flex: 0 1 auto;
                 min-width: 0;
+                justify-content: flex-start;
             }
             .brand-title{
                 font-size: 0.8rem;
@@ -231,16 +247,30 @@
                 white-space: nowrap;
             }
             .topbar-logo-slot,
-            .topbar-zone-left .topbar-logo-slot,
             .topbar-zone-right .topbar-logo-slot{
                 width: auto;
                 height: 28px;
                 max-height: 28px;
                 transform: none;
             }
+            .topbar-zone-left .topbar-logo-slot{
+                width: auto;
+                height: 5px;
+                max-height: 40px;
+                transform: none;
+                flex-shrink: 0;
+            }
+            .topbar-zone-left .topbar-logo{
+                max-height: 95px;
+                max-width: 110px;
+            }
             .topbar-logo{
-                max-height: 28px;
-                max-width: 64px;
+                max-height: 38px;
+                max-width: 88px;
+            }
+            .topbar-zone-right{
+                justify-content: space-between;
+                gap: 10px;
             }
             .topbar-clock{
                 font-size: 0.7rem;
@@ -257,8 +287,15 @@
         }
 
         @media (max-width: 380px){
+            .topbar-zone-left{
+                padding: 0 36px 0 46px;
+            }
+            .topbar-zone-left .topbar-logo{
+                max-height: 50px;
+                max-width: 80px;
+            }
             .topbar-clock span#clock{
-                max-width: 42vw;
+                max-width: 34vw;
             }
             .brand-title{
                 max-width: 40vw;
