@@ -200,24 +200,68 @@
         }
 
         @media (max-width: 768px){
+            /* Topbar dipaksa jadi 2 baris yang rapi di layar sempit, bukan
+               wrap otomatis, supaya jam & logo tidak pernah bertabrakan
+               dengan brand/hamburger di satu baris. */
             .topbar{
-                flex-wrap: wrap;
-                row-gap: 10 px;
+                flex-direction: column;
+                align-items: stretch;
+                flex-wrap: nowrap;
+                gap: 8px;
+                padding: 0.55rem 0.75rem;
+            }
+            .topbar-zone{
+                width: 100%;
+                justify-content: space-between;
+            }
+            .topbar-zone-left{
+                flex: 0 0 auto;
             }
             .brand-subtitle{
                 display: none;
             }
-            .topbar-logo-slot{
-                width: auto;
-                height: 30px;
+            .topbar-brand{
+                flex: 1 1 auto;
+                min-width: 0;
             }
-            .topbar-logo{
-                max-height: 30px;
-                max-width: 90px;
+            .brand-title{
+                font-size: 0.8rem;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
+            .topbar-logo-slot,
+            .topbar-zone-left .topbar-logo-slot,
             .topbar-zone-right .topbar-logo-slot{
                 width: auto;
-                height: 9   0px;
+                height: 28px;
+                max-height: 28px;
+                transform: none;
+            }
+            .topbar-logo{
+                max-height: 28px;
+                max-width: 64px;
+            }
+            .topbar-clock{
+                font-size: 0.7rem;
+                padding: 0.32rem 0.7rem;
+                gap: 6px;
+                flex: 0 1 auto;
+                min-width: 0;
+            }
+            .topbar-clock span#clock{
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }
+
+        @media (max-width: 380px){
+            .topbar-clock span#clock{
+                max-width: 42vw;
+            }
+            .brand-title{
+                max-width: 40vw;
             }
         }
         /* ── LIVE BADGE ── */
@@ -488,6 +532,7 @@
         }
         @media (max-width: 1100px) { .stat-grid { grid-template-columns: repeat(3, 1fr); } }
         @media (max-width: 640px)  { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 420px)  { .stat-grid { grid-template-columns: 1fr; gap: 0.7rem; } }
 
         .stat-card {
             background: linear-gradient(180deg, rgba(28,34,48,0.55), rgba(22,27,34,0.85));
@@ -1011,18 +1056,122 @@
             filter: invert(1) brightness(2);
         }
 
-        /* ── RESPONSIF SIDEBAR ── */
+        /* ── RESPONSIF SIDEBAR (off-canvas drawer di mobile/tablet) ── */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            z-index: 1040;
+            opacity: 0;
+            transition: opacity .25s ease;
+        }
+        .sidebar-overlay.show {
+            display: block;
+            opacity: 1;
+        }
+
         @media (max-width: 992px) {
-            .sidebar {
-                display: none;
-            }
             .dashboard-layout {
                 gap: 0;
+            }
+
+            /* Sidebar jadi panel geser (off-canvas) alih-alih hilang total,
+               supaya menu tetap bisa diakses lewat tombol hamburger di HP/tablet. */
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                width: 78vw;
+                max-width: 280px;
+                min-width: 0;
+                border-radius: 0;
+                z-index: 1050;
+                transform: translateX(-100%);
+                opacity: 1;
+                pointer-events: auto;
+                transition: transform .28s ease;
+                box-shadow: 0 0 40px rgba(0,0,0,0.5);
+            }
+            .sidebar:not(.closed) {
+                transform: translateX(0);
+            }
+            .sidebar.closed {
+                width: 78vw;
+                max-width: 280px;
+                padding: 16px 12px;
+                border: 1px solid var(--border-light);
+                box-shadow: none;
+            }
+            .sidebar.closed .sidebar-header,
+            .sidebar.closed .sidebar-menu,
+            .sidebar.closed .sidebar-footer {
+                display: flex;
+            }
+            .sidebar.closed .sidebar-menu { display: flex; flex-direction: column; }
+        }
+
+        /* ── PENYESUAIAN UMUM UNTUK LAYAR KECIL (mobile-friendly spacing/typography) ── */
+        @media (max-width: 640px) {
+            .main-wrap {
+                padding: 1rem 0.85rem 2rem;
+            }
+            .section-label {
+                margin: 1.25rem 0 0.6rem;
+                font-size: 0.65rem;
+            }
+            .stat-card {
+                padding: 1rem 0.9rem;
+            }
+            .stat-value {
+                font-size: 1.5rem;
+            }
+            .stat-icon {
+                width: 30px; height: 30px;
+                margin-bottom: 0.6rem;
+            }
+            .panel-header {
+                padding: 0.7rem 1rem;
+            }
+            .panel-body {
+                padding: 0.85rem 1rem;
+            }
+            .panel-title {
+                font-size: 0.76rem;
+            }
+            .trend-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .trend-toolbar .trend-controls input {
+                width: 100%;
+            }
+            .report-summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .data-table thead th,
+            .data-table tbody td {
+                padding: 0.55rem 0.75rem;
+                font-size: 0.76rem;
+            }
+            .modal-body {
+                padding: 1.1rem;
+            }
+            .modal-body .profile-field {
+                flex-wrap: wrap;
+                gap: 0.4rem 0.75rem;
+            }
+            .modal-body .profile-field .field-label {
+                width: auto;
             }
         }
     </style>
 </head>
 <body>
+
+<!-- Overlay untuk sidebar off-canvas di mobile/tablet -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
 <!-- ── TOPBAR ── -->
 <header class="topbar">
@@ -1712,11 +1861,43 @@
 
     const sidebarToggle = document.getElementById('sidebarToggle');
     const sidebar = document.querySelector('.sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    function syncSidebarOverlay() {
+        if (!sidebar || !sidebarOverlay) return;
+        const isMobile = window.matchMedia('(max-width: 992px)').matches;
+        const isOpen = !sidebar.classList.contains('closed');
+        sidebarOverlay.classList.toggle('show', isMobile && isOpen);
+    }
+
     if (sidebarToggle && sidebar) {
         sidebarToggle.addEventListener('click', () => {
             sidebar.classList.toggle('closed');
+            syncSidebarOverlay();
         });
     }
+
+    // Tutup sidebar saat overlay (area gelap) di-tap, khusus tampilan mobile/tablet
+    if (sidebarOverlay && sidebar) {
+        sidebarOverlay.addEventListener('click', () => {
+            sidebar.classList.add('closed');
+            syncSidebarOverlay();
+        });
+    }
+
+    // Tutup sidebar otomatis setelah memilih menu, khusus di mobile/tablet
+    if (sidebar) {
+        sidebar.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', () => {
+                if (window.matchMedia('(max-width: 992px)').matches) {
+                    sidebar.classList.add('closed');
+                    syncSidebarOverlay();
+                }
+            });
+        });
+    }
+
+    window.addEventListener('resize', syncSidebarOverlay);
 })();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
